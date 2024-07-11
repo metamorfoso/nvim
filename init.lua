@@ -91,7 +91,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- Set to true if you have a Nerd Font installed
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`
@@ -186,6 +186,15 @@ vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left wind
 vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+
+-- Key bindings for telescope-file-browser
+vim.keymap.set("n", "<space>fb", ":Telescope file_browser<CR>")
+-- open file_browser with the path of the current buffer
+-- vim.keymap.set("n", "<space>fb", ":Telescope file_browser path=%:p:h select_buffer=true<CR>")
+-- -- Alternatively, using lua API
+-- vim.keymap.set("n", "<space>fb", function()
+-- 	require("telescope").extensions.file_browser.file_browser()
+-- end)
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -399,6 +408,11 @@ require("lazy").setup({
 		end,
 	},
 
+	{ -- File browser powered by telescope
+		"nvim-telescope/telescope-file-browser.nvim",
+		dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" },
+	},
+
 	{ -- LSP Configuration & Plugins
 		"neovim/nvim-lspconfig",
 		dependencies = {
@@ -550,9 +564,8 @@ require("lazy").setup({
 				--    https://github.com/pmizio/typescript-tools.nvim
 				--
 				-- But for many setups, the LSP (`tsserver`) will work just fine
-				tsserver = {},
+				-- tsserver = {},
 				--
-
 				lua_ls = {
 					-- cmd = {...},
 					-- filetypes { ...},
@@ -615,7 +628,10 @@ require("lazy").setup({
 				--
 				-- You can use a sub-list to tell conform to run *until* a formatter
 				-- is found.
-				-- javascript = { { "prettierd", "prettier" } },
+				javascript = { { "prettierd", "prettier" } },
+				javasriptreact = { { "prettierd", "prettier" } },
+				typescript = { { "prettierd", "prettier" } },
+				typescriptreact = { { "prettierd", "prettier" } },
 			},
 		},
 	},
@@ -713,18 +729,89 @@ require("lazy").setup({
 		end,
 	},
 
+	--typescript
+	{
+		"pmizio/typescript-tools.nvim",
+		dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+		opts = {},
+	},
+
 	{ -- You can easily change to a different colorscheme.
 		-- Change the name of the colorscheme plugin below, and then
 		-- change the command in the config to whatever the name of that colorscheme is
 		--
 		-- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`
-		"rose-pine/neovim", -- "folke/tokyonight.nvim",
+		"rose-pine/neovim",
 		name = "rose-pine",
 		priority = 1000, -- make sure to load this before all the other start plugins
 		init = function()
-			-- Load the colorscheme here.
-			-- Like many other themes, this one has different styles, and you could load
-			-- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
+			require("rose-pine").setup({
+				variant = "auto", -- auto, main, moon, or dawn
+				dark_variant = "main", -- main, moon, or dawn
+				dim_inactive_windows = false,
+				extend_background_behind_borders = true,
+
+				enable = {
+					terminal = true,
+					legacy_highlights = true, -- Improve compatibility for previous versions of Neovim
+					migrations = true, -- Handle deprecated options automatically
+				},
+
+				styles = {
+					bold = true,
+					italic = true,
+					transparency = false,
+				},
+
+				groups = {
+					border = "muted",
+					link = "iris",
+					panel = "surface",
+
+					error = "love",
+					hint = "iris",
+					info = "foam",
+					note = "pine",
+					todo = "rose",
+					warn = "gold",
+
+					git_add = "foam",
+					git_change = "rose",
+					git_delete = "love",
+					git_dirty = "rose",
+					git_ignore = "muted",
+					git_merge = "iris",
+					git_rename = "pine",
+					git_stage = "iris",
+					git_text = "rose",
+					git_untracked = "subtle",
+
+					h1 = "iris",
+					h2 = "foam",
+					h3 = "rose",
+					h4 = "gold",
+					h5 = "pine",
+					h6 = "foam",
+				},
+
+				highlight_groups = {
+					-- Comment = { fg = "foam" },
+					-- VertSplit = { fg = "muted", bg = "muted" },
+					Cursor = { fg = "#ffffff", bg = "#ffffff" },
+				},
+
+				before_highlight = function(group, highlight, palette)
+					-- Disable all undercurls
+					-- if highlight.undercurl then
+					--     highlight.undercurl = false
+					-- end
+					--
+					-- Change palette colour
+					-- if highlight.fg == palette.pine then
+					--     highlight.fg = palette.foam
+					-- end
+				end,
+			})
 			vim.cmd.colorscheme("rose-pine-dawn")
 			vim.opt.termguicolors = true
 			-- You can configure highlights by doing something like
