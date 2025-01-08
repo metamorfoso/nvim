@@ -191,6 +191,9 @@ vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right win
 vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
 vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
+-- Key bindings for git-blame
+vim.keymap.set("n", "<leader>gb", ":GitBlameToggle<CR>", { desc = "Toggle Git [B]lame" })
+
 -- Key bindings for telescope-file-browser
 vim.keymap.set("n", "<space>fb", ":Telescope file_browser<CR>")
 -- open file_browser with the path of the current buffer
@@ -290,13 +293,21 @@ require("lazy").setup({
 			require("which-key").setup()
 
 			-- Document existing key chains
-			require("which-key").register({
-				["<leader>c"] = { name = "[C]ode", _ = "which_key_ignore" },
-				["<leader>d"] = { name = "[D]ocument", _ = "which_key_ignore" },
-				["<leader>r"] = { name = "[R]ename", _ = "which_key_ignore" },
-				["<leader>s"] = { name = "[S]earch", _ = "which_key_ignore" },
-				["<leader>w"] = { name = "[W]orkspace", _ = "which_key_ignore" },
-				["<leader>t"] = { name = "File [T]ree", _ = "which_key_ignore" },
+			require("which-key").add({
+				{ "<leader>c", group = "[C]ode" },
+				{ "<leader>c_", hidden = true },
+				{ "<leader>d", group = "[D]ocument" },
+				{ "<leader>d_", hidden = true },
+				{ "<leader>g", group = "[G]it" },
+				{ "<leader>g_", hidden = true },
+				{ "<leader>r", group = "[R]ename" },
+				{ "<leader>r_", hidden = true },
+				{ "<leader>s", group = "[S]earch" },
+				{ "<leader>s_", hidden = true },
+				{ "<leader>t", group = "File [T]ree" },
+				{ "<leader>t_", hidden = true },
+				{ "<leader>w", group = "[W]orkspace" },
+				{ "<leader>w_", hidden = true },
 			})
 		end,
 	},
@@ -924,6 +935,13 @@ require("lazy").setup({
 			"nvim-tree/nvim-web-devicons", -- not strictly required, but recommended
 			"MunifTanjim/nui.nvim",
 			-- "3rd/image.nvim", -- Optional image support in preview window: See `# Preview Mode` for more information
+		},
+	},
+
+	{
+		"f-person/git-blame.nvim",
+		opts = {
+			enabled = false,
 		},
 	},
 	-- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
