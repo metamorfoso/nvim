@@ -195,7 +195,11 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 vim.keymap.set("n", "<leader>gb", ":GitBlameToggle<CR>", { desc = "Toggle Git [B]lame" })
 
 -- Key bindings for telescope-file-browser
-vim.keymap.set("n", "<space>fb", ":Telescope file_browser<CR>")
+vim.keymap.set("n", "<leader>fb", ":Telescope file_browser<CR>", { desc = "[B]rowse with Telescope" })
+
+-- Copy file paths
+vim.keymap.set("n", "<leader>fr", ":let @+ = expand('%')<CR>", { desc = "Copy [R]elative path to clipboard" })
+
 -- open file_browser with the path of the current buffer
 -- vim.keymap.set("n", "<space>fb", ":Telescope file_browser path=%:p:h select_buffer=true<CR>")
 -- -- Alternatively, using lua API
@@ -298,6 +302,7 @@ require("lazy").setup({
 				{ "<leader>c_", hidden = true },
 				{ "<leader>d", group = "[D]ocument" },
 				{ "<leader>d_", hidden = true },
+				{ "<leader>f", group = "[F]ile" },
 				{ "<leader>g", group = "[G]it" },
 				{ "<leader>g_", hidden = true },
 				{ "<leader>r", group = "[R]ename" },
