@@ -303,7 +303,7 @@ require("lazy").setup({
 				{ "<leader>d", group = "[D]ocument" },
 				{ "<leader>d_", hidden = true },
 				{ "<leader>f", group = "[F]ile" },
-				{ "<leader>g", group = "[G]it" },
+				{ "<leader>g", group = "[G]it", mode = { "n", "v" } },
 				{ "<leader>g_", hidden = true },
 				{ "<leader>r", group = "[R]ename" },
 				{ "<leader>r_", hidden = true },
@@ -757,6 +757,17 @@ require("lazy").setup({
 		"pmizio/typescript-tools.nvim",
 		dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
 		opts = {},
+	},
+
+	-- Git link generation
+	{
+		"linrongbin16/gitlinker.nvim",
+		cmd = "GitLink",
+		opts = {},
+		keys = {
+			{ "<leader>gy", "<cmd>GitLink<cr>", mode = { "n", "v" }, desc = "[y]ank git link" },
+			{ "<leader>gO", "<cmd>GitLink!<cr>", mode = { "n", "v" }, desc = "[O]pen git link" },
+		},
 	},
 
 	{ -- You can easily change to a different colorscheme.
