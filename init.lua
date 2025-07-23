@@ -558,13 +558,6 @@ require("lazy").setup({
 				end,
 			})
 
-			-- LSP servers and clients are able to communicate to each other what features they support.
-			--  By default, Neovim doesn't support everything that is in the LSP Specification.
-			--  When you add nvim-cmp, luasnip, etc. Neovim now has *more* capabilities.
-			--  So, we create new capabilities with nvim cmp, and then broadcast that to the servers.
-			local capabilities = vim.lsp.protocol.make_client_capabilities()
-			capabilities = vim.tbl_deep_extend("force", capabilities, require("cmp_nvim_lsp").default_capabilities())
-
 			-- Enable the following language servers
 			--  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
 			--
@@ -598,8 +591,12 @@ require("lazy").setup({
 							completion = {
 								callSnippet = "Replace",
 							},
-							-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-							-- diagnostics = { disable = { 'missing-fields' } },
+							diagnostics = {
+								-- Get the language server to recognize the `vim` global
+								globals = { "vim" },
+								-- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
+								--  disable = { 'missing-fields' },
+							},
 						},
 					},
 				},
@@ -615,13 +612,20 @@ require("lazy").setup({
 
 			-- You can add other tools here that you want Mason to install
 			-- for you, so that they are available from within Neovim.
-			local ensure_installed = vim.tbl_keys(servers or {})
-			require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+			require("mason-tool-installer").setup({ ensure_installed = vim.tbl_keys(servers or {}) })
 
 			require("mason-lspconfig").setup({
-				ensure_installed = ensure_installed,
-				automatic_installation = true,
+				automatic_enable = vim.tbl_keys(servers or {}),
 			})
+
+			-- Installed LSPs are configured and enabled automatically with mason-lspconfig
+			-- The loop below is for overriding the default configuration of LSPs with the ones in the servers table
+			for server_name, config in pairs(servers) do
+				vim.lsp.config(server_name, config)
+			end
+
+			-- NOTE: Some servers may require an old setup until they are updated. For the full list refer here: https://github.com/neovim/nvim-lspconfig/issues/3705
+			-- These servers will have to be manually set up with require("lspconfig").server_name.setup{}
 		end,
 	},
 
