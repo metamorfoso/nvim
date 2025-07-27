@@ -142,6 +142,14 @@ vim.opt.splitbelow = true
 vim.opt.list = true
 vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
+-- Some sane indentation defaults (note that the vim-sleuth plugin will adjust shiftwidth dynamically)
+vim.opt.shiftwidth = 4
+vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
+vim.opt.expandtab = true
+vim.opt.autoindent = true
+vim.opt.smartindent = true
+
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = "split"
 
